@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Navbar from "../components/Navbar";
+import Navbar2 from "../components/Navbarv2";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,15 +21,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="es">
+      <body className="bg-gray-900 text-white">
+        <Navbar2 /> {/* <-- Aquí vive el Navbar globalmente */}
+        <main className="pt-24 min-h-screen">
+          {" "}
+          {/* El padding superior evita que el contenido se tape */}
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
