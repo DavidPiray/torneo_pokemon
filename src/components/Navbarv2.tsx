@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
   return (
@@ -10,23 +11,23 @@ export default function Navbar() {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center border-2 border-cyan-400 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.8)] transition-all duration-300">
                 {/* <span className="text-cyan-400 font-bold text-xl">8M</span> */}
-                <img src="/Logo_LSFondo.png" alt="CM" />
+                <Image
+                  src="/Logo_LSFondo.png"
+                  alt="CM"
+                  width={40}
+                  height={40}
+                  className= "object-contain"
+                  style={{ width: 'auto', height: 'auto' }}
+                />
               </div>
-              <span className="text-white font-extrabold text-2xl tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 group-hover:text-cyan-300 transition-colors duration-300">
-                
-              </span>
+              <span className="text-white font-extrabold text-2xl tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 group-hover:text-cyan-300 transition-colors duration-300"></span>
             </Link>
           </div>
 
           {/* Enlaces Centrales (Ocultos en móviles pequeños, visibles en PC) */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              {[
-                "Inicio",
-                "Torneo",
-                "Entrenadores",
-                "Noticias",
-              ].map((item) => (
+              {["Inicio", "Torneo", "Entrenadores", "Noticias"].map((item) => (
                 <Link
                   key={item}
                   href={item === "Inicio" ? "/" : `/${item.toLowerCase()}`}

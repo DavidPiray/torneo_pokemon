@@ -1,20 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
+import Image from "next/image";
 import NoticiaCard from "../components/NoticiaCard";
 import BatallaCard from "../components/BatallaCard";
 
 export default function LandingPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
-  const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "discord",
-      options: { redirectTo: `${window.location.origin}/`, scopes: "identify" },
-    });
-  };
+  const [loading] = useState(false);
 
   const directoTwitch = () => {
     window.open("https://www.twitch.tv/totogamer14", "_blank");
@@ -38,10 +31,14 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative z-10 text-center space-y-6 px-6 mb-20">
-        <img
+        <Image
           src="/pokeball.png"
           alt="Pokébola"
-          className="w-24 h-24 mx-auto animate-bounce"
+          width={128}
+          height={128}
+          className="mx-auto animate-bounce"
+          style={{ width: 'auto', height: 'auto' }}
+          priority
         />
         <h1 className="text-7xl font-black tracking-tighter uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
           Copa de Maestros
