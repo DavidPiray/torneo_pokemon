@@ -6,6 +6,7 @@ import Image from "next/image";
 import NoticiaCard from "../components/NoticiaCard";
 import BatallaCard from "../components/BatallaCard";
 
+
 export default function LandingPage() {
   const [loading] = useState(false);
 
