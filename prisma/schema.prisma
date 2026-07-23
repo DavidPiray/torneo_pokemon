@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["public"]
+}
+
+model Perfil {
+  id                  String   @id @db.Uuid
+  discord_id          String?  @unique
+  nombre_streamer     String
+  minecraft_uuid      String   @unique
+  pais                String?  @default("ND")
+  es_npc              Boolean  @default(false)
+  
+  // Starter
+  pokemon_inicial_id  Int?
+  pokemon_inicial_nom String?
+
+  // Redes Sociales en JSON ({ twitch: "...", youtube: "...", kick: "...", tiktok: "..." })
+  redes_sociales      Json?
+
+  created_at          DateTime @default(now())
+
+  clasificacion       Clasificacion?
+  equipo              EquipoPokemon[]
+  notificaciones      Notificacion[]
+
+  @@map("perfiles")
+  @@schema("public")
+}
+
+model Clasificacion {
+  id        String   @id @default(uuid()) @db.Uuid
+  perfil_id String   @unique @db.Uuid
+  elo       Int      @default(1000)
+  rango     String   @default("Normal")
+  victorias Int      @default(0)
+  derrotas  Int      @default(0)
+
+  perfil    Perfil   @relation(fields: [perfil_id], references: [id], onDelete: Cascade)
+
+  @@map("clasificacion")
+  @@schema("public")
+}
+
+model EquipoPokemon {
+  id         String   @id @default(uuid()) @db.Uuid
+  perfil_id  String   @db.Uuid
+  slot       Int
+  pokemon_id Int
+  nombre     String
+  sprite_url String
+
+  perfil     Perfil   @relation(fields: [perfil_id], references: [id], onDelete: Cascade)
+
+  @@unique([perfil_id, slot])
+  @@map("equipos_pokemon")
+  @@schema("public")
+}
+
+model Notificacion {
+  id         String   @id @default(uuid()) @db.Uuid
+  perfil_id  String   @db.Uuid
+  titulo     String
+  mensaje    String
+  leido      Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  perfil     Perfil   @relation(fields: [perfil_id], references: [id], onDelete: Cascade)
+
+  @@map("notificaciones")
+  @@schema("public")
+}
+
+model AnuncioGlobal {
+  id         String   @id @default(uuid()) @db.Uuid
+  titulo     String
+  contenido  String
+  tipo       String   @default("evento")
+  created_at DateTime @default(now())
+
+  @@map("anuncios_globales")
+  @@schema("public")
+}
+
+model ConfiguracionTorneo {
+  id              Int     @id @default(1)
+  fase_actual     String  @default("REGISTRO") // REGISTRO, REVELADO, EN_JUEGO, FINALIZADO
+  revelar_equipos Boolean @default(false)
+
+  @@map("configuracion_torneo")
+  @@schema("public")
+}
