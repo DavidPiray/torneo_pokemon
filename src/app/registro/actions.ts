@@ -1,12 +1,12 @@
 "use server";
 
-import { prisma } from "../../lib/prisma";
+import { prisma } from "@/lib/prisma";
 
-interface GuardarPerfilInput {
+export interface RegistroData {
   id: string;
   nombreStreamer: string;
   minecraftUuid: string;
-  pais: string;
+  pais?: string;
   pokemonInicialId?: number;
   pokemonInicialNom?: string;
   redesSociales?: {
@@ -17,33 +17,35 @@ interface GuardarPerfilInput {
   };
 }
 
-export async function registrarEntrenadorAction(data: GuardarPerfilInput) {
+export async function registrarEntrenadorAction(data: RegistroData) {
   try {
     // 1. Crear o actualizar Perfil usando Prisma
-    const perfil = await prisma.perfil.upsert({
+    await prisma.perfil.upsert({
       where: { id: data.id },
       update: {
         nombre_streamer: data.nombreStreamer,
         minecraft_uuid: data.minecraftUuid,
-        pais: data.pais,
+        pais: data.pais || "ND",
         pokemon_inicial_id: data.pokemonInicialId,
         pokemon_inicial_nom: data.pokemonInicialNom,
-        redes_sociales: data.redesSociales || {},
+        redes_sociales: data.redesSociales
+          ? JSON.parse(JSON.stringify(data.redesSociales))
+          : undefined,
       },
       create: {
         id: data.id,
-        discord_id: data.id,
         nombre_streamer: data.nombreStreamer,
         minecraft_uuid: data.minecraftUuid,
-        pais: data.pais,
+        pais: data.pais || "ND",
         pokemon_inicial_id: data.pokemonInicialId,
         pokemon_inicial_nom: data.pokemonInicialNom,
-        redes_sociales: data.redesSociales || {},
-        es_npc: false,
+        redes_sociales: data.redesSociales
+          ? JSON.parse(JSON.stringify(data.redesSociales))
+          : undefined,
       },
     });
 
-    // 2. Inicializar la Clasificación
+    // 2. Inicializar la clasificación con 1000 ELO si no existe
     await prisma.clasificacion.upsert({
       where: { perfil_id: data.id },
       update: {},
@@ -51,17 +53,14 @@ export async function registrarEntrenadorAction(data: GuardarPerfilInput) {
         perfil_id: data.id,
         elo: 1000,
         rango: "Normal",
-        victorias: 0,
-        derrotas: 0,
       },
     });
 
     return { success: true };
-  } catch (error: any) {
-    console.error("Error en Server Action registrarEntrenador:", error);
-    return {
-      success: false,
-      error: error.message || "Error al guardar en la base de datos",
-    };
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Error desconocido";
+    console.error("Error en Server Action registrarEntrenador:", err);
+    return { success: false, error: errorMessage };
   }
 }

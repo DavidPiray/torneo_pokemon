@@ -26,21 +26,20 @@ export async function buscarPokemon(
         data.sprites.other?.["official-artwork"]?.front_default ||
         data.sprites.front_default ||
         "",
-      types: data.types.map((t: any) => t.type.name),
+      types: data.types.map((t: { type: { name: string } }) => t.type.name),
     };
-  } catch (error) {
+  } catch {
     return null;
   }
 }
 
-// Obtener lista rápida de nombres para el buscador interactivo 
+// Obtener lista rápida de nombres para el buscador interactivo (Autocomplete)
 export async function buscarSugerenciasPokemon(
   query: string,
 ): Promise<string[]> {
   if (!query || query.length < 2) return [];
 
   try {
-    // Obtenemos los primeros 1025 pokémon
     const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1025");
     if (!res.ok) return [];
 
@@ -49,7 +48,7 @@ export async function buscarSugerenciasPokemon(
       .filter((p: { name: string }) =>
         p.name.toLowerCase().includes(query.toLowerCase().trim()),
       )
-      .slice(0, 5) // Mostramos máximo 5 sugerencias en el menú
+      .slice(0, 5)
       .map((p: { name: string }) => p.name);
 
     return filtrados;
