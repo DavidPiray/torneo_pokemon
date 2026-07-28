@@ -2,6 +2,8 @@ name: CI Torneo Pokemon
 env:
     NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
     NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    DIRECT_URL: ${{ secrets.DIRECT_URL }}
 on:
   push:
     branches: [ "master", "develop" ]

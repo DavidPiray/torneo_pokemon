@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "../lib/supabase";
 import Image from "next/image";
 import NoticiaCard from "../components/NoticiaCard";
 import BatallaCard from "../components/BatallaCard";
