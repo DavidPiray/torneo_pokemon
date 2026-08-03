@@ -24,7 +24,7 @@ import type {
   ClasificacionData,
   PokemonSlot,
   NotificacionItem,
-} from "./dashboard";
+} from "@/interface/dashboard";
 import { TYPE_COLORS, LISTA_PAISES } from "@/lib/constants";
 
 export default function DashboardPage() {
