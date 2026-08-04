@@ -28,6 +28,10 @@ model Perfil {
   equipo              EquipoPokemon[]
   notificaciones      Notificacion[]
 
+  enfrentamientosComoJ1 Enfrentamiento[]  @relation("EnfrentamientosJ1")
+  enfrentamientosComoJ2 Enfrentamiento[]  @relation("EnfrentamientosJ2")
+  enfrentamientosGanados Enfrentamiento[] @relation("EnfrentamientosGanador")
+
   @@map("perfiles")
   @@schema("public")
 }
@@ -92,5 +96,33 @@ model ConfiguracionTorneo {
   revelar_equipos Boolean @default(false)
 
   @@map("configuracion_torneo")
+  @@schema("public")
+}
+
+model Enfrentamiento {
+  id            String   @id @default(uuid()) @db.Uuid
+  tipo          String   @default("FASE_REGULAR") // "FASE_REGULAR" | "PLAYOFFS"
+  fase          String   // "JORNADA_1", "JORNADA_2", "CUARTOS_1", "SEMIFINAL_1", "FINAL"
+  
+  jugador1_id   String   @db.Uuid
+  jugador2_id   String   @db.Uuid
+  ganador_id    String?  @db.Uuid  // Nulo si aún no se ha jugado
+  
+  // Snapshots de los equipos de 6 Pokémon en el momento exacto del combate
+  equipo_j1     Json?    
+  equipo_j2     Json?    
+
+  // Variación de ELO tras el combate (Opcional)
+  elo_cambio_j1 Int?     @default(0) // Ej: +25 o -18
+  elo_cambio_j2 Int?     @default(0)
+
+  fecha_combate DateTime @default(now())
+
+  // Relaciones con Perfil
+  jugador1      Perfil   @relation("EnfrentamientosJ1", fields: [jugador1_id], references: [id])
+  jugador2      Perfil   @relation("EnfrentamientosJ2", fields: [jugador2_id], references: [id])
+  ganador       Perfil?  @relation("EnfrentamientosGanador", fields: [ganador_id], references: [id])
+
+  @@map("enfrentamientos")
   @@schema("public")
 }
