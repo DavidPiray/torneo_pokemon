@@ -105,7 +105,7 @@ export default function Navbar() {
           {/* Enlaces Centrales */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              {["Inicio", "Torneo", "Entrenadores", "Noticias"].map((item) => (
+              {["Inicio", "Torneo", "Combates", "Entrenadores", "Noticias"].map((item) => (
                 <Link
                   key={item}
                   href={item === "Inicio" ? "/" : `/${item.toLowerCase()}`}
